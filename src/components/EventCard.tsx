@@ -62,9 +62,7 @@ export default function EventCard({ event }: EventCardProp) {
                     "relative",
                     "rounded-lg",
                     "overflow-hidden",
-                    "transition", "duration-200",
-                    "hover:scale-105",
-                    "active:scale-[1.02]"
+                    "state-effects"
                 ].join(" ")}
             >
                 <section

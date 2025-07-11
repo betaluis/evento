@@ -1,3 +1,4 @@
+import { cn } from "@/lib/utils"
 import React from "react"
 import { twMerge } from "tailwind-merge"
 
@@ -18,7 +19,7 @@ export default function MainHeader({
     return (
         <h1
             className={
-                twMerge(
+                cn(
                     textStyles.mobile, 
                     textStyles.desktop, 
                     className

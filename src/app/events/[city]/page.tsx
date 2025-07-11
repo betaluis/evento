@@ -27,12 +27,12 @@ export default async function Events({ params }: EventsPageProps) {
         params.city.slice(0, 1).toUpperCase()
         + params.city.slice(1)
 
-    // Fetch data
-
-    const url =
-        `https://bytegrad.com/course-assets/projects/evento/api/events?city=all`
+    const url = `https://bytegrad.com/course-assets/projects/evento/api/events?city=${city}`
+    console.log(url)
 
     const res = await fetch(url);
+
+    if (!res.ok) throw new Error("Error fetching data")
     
     const events: EventType[] = await res.json()
 
