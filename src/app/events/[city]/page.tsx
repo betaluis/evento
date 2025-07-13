@@ -28,7 +28,6 @@ export default async function Events({ params }: EventsPageProps) {
         + params.city.slice(1)
 
     const url = `https://bytegrad.com/course-assets/projects/evento/api/events?city=${city}`
-    console.log(url)
 
     const res = await fetch(url);
 

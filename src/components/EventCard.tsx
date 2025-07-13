@@ -109,7 +109,7 @@ export default function EventCard({ event }: EventCardProp) {
                     alt="Event"
                     width={500}
                     height={250}
-                    className="object-fit w-full"
+                    className="object-cover w-full"
                 />
                 <div className={eventCardBodyStyles.mobile.join(" ")}>
                     <h2 className={eventHeadingStyles.mobile.join(" ")}>

@@ -7,6 +7,11 @@ type EventPageProps = {
     }
 }
 
+type ContentSectionProps = {
+    heading: string;
+    body: string;
+}
+
 export default async function Event({ params }: EventPageProps) {
 
     const slug = params.slug
@@ -17,7 +22,7 @@ export default async function Event({ params }: EventPageProps) {
 
     return (
         <main>
-            <section 
+            <section
                 className="
                     flex justify-center items-center relative overflow-hidden
                     py-14 md:py-20
@@ -60,9 +65,9 @@ export default async function Event({ params }: EventPageProps) {
                         <p className="whitespace-nowrap text-xl text-white/75">
                             Organized by <span className="italic">{event.organizerName}</span>
                         </p>
-                        <button 
+                        <button
                             className={[
-                                "bg-white/20 bg-blur w-[95vw]", 
+                                "bg-white/20 bg-blur w-[95vw]",
                                 "py-2 mt-5",
                                 "text-lg capitalize",
                                 "border-white/10 rounded",
@@ -76,17 +81,41 @@ export default async function Event({ params }: EventPageProps) {
                     </div>
                 </div>
             </section>
-            <div>
-                <section className="text-center">
-                    <h2 className="text-2xl">About this event</h2>
-                    <p className="text-lg leading-8">{event.description}</p>
-                </section>
-                <section>
-                    <h2>Location</h2>
-                    <p>{event.location}</p>
-                </section>
+            <div
+                className={[
+                    "flex flex-col justify-center items-center",
+                    "py-14",
+                    "text-center"
+                ].join(" ")}
+            >
+                <ContentSection
+                    heading={"About this event"}
+                    body={event.description}
+                />
+                <ContentSection
+                    heading={"Location"}
+                    body={event.location}
+                />
             </div>
         </main >
     )
 }
 
+const ContentSection = ({ heading, body }: ContentSectionProps) => {
+    return (
+        <section className="text-center">
+            <h2 className="text-3xl font-bold text-white/95">
+                {heading}
+            </h2>
+            <p
+                className={[
+                    "max-w-[40rem]",
+                    "leading-8 text-white/75",
+                    "pt-4 pb-8 px-8"
+                ].join(" ")}
+            >
+                {body}
+            </p>
+        </section>
+    )
+}
