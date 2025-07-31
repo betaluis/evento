@@ -1,29 +1,21 @@
-import { EventType } from "@/lib/types"
+import { getEvents } from "@/lib/utils"
 import EventCard from "./EventCard"
+import { EventType } from "@/lib/types"
 
-type EventsListProps = {
-    events: EventType[]
+type EventListProps = {
+    city: string
 }
 
-export default function EventsList({ events }: EventsListProps) {
+export default async function EventsList({ city }: EventListProps) {
+    const events = await getEvents(city)
+
+    if (!events) return <div>No events available</div>
+
     return (
-        <section 
-            className={[
-                "grid",
-                "gap-10",
-                "grid-cols-1",
-                "max-w-5xl",
-                "md:grid-cols-2",
-                "lg:grid-cols-3",
-            ].join(" ")}
-        >
-            {events.map(item => (
-                <EventCard 
-                    key={item.id}
-                    event={item}
-                />
+        <section className="grid max-w-5xl grid-cols-1 gap-10 md:grid-cols-2 lg:grid-cols-3">
+            {events.map((item) => (
+                <EventCard key={item.id} event={item} />
             ))}
         </section>
     )
 }
-

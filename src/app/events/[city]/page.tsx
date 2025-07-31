@@ -1,6 +1,9 @@
-import EventsList from "@/components/EventsList";
-import H1 from "@/components/H1";
-import { EventType } from "@/lib/types";
+import EventsList from "@/components/EventsList"
+import H1 from "@/components/H1"
+import { Suspense } from "react"
+import Loading from "./loading"
+import { capitalize } from "@/lib/utils"
+import { Metadata } from "next"
 
 const mainStyles = {
     mobile: [
@@ -10,7 +13,7 @@ const mainStyles = {
         "py-24",
         "px-[20px]",
         "min-h-[110vh]",
-    ]
+    ],
 }
 
 type EventsPageProps = {
@@ -19,34 +22,30 @@ type EventsPageProps = {
     }
 }
 
-export default async function Events({ params }: EventsPageProps) {
+export function generateMetadata({ params }: EventsPageProps): Metadata {
+    const { city } = params
 
+    const capitalizedCity = capitalize(city)
+
+    return {
+        title: city === "all" ? "All Events" : `Events in ${capitalizedCity}`,
+    }
+}
+
+export default async function Events({ params }: EventsPageProps) {
     const city = params.city
 
-    const formattedCity =
-        params.city.slice(0, 1).toUpperCase()
-        + params.city.slice(1)
-
-    const url = `https://bytegrad.com/course-assets/projects/evento/api/events?city=${city}`
-
-    const res = await fetch(url);
-
-    if (!res.ok) throw new Error("Error fetching data")
-    
-    const events: EventType[] = await res.json()
+    const capitalizedCity = capitalize(city)
 
     return (
-        <main
-            className={
-                [...mainStyles.mobile].join(" ")
-            }
-        >
+        <main className={[...mainStyles.mobile].join(" ")}>
             <H1 className="pb-12">
-                {city === "All" && "All Events"}
-                {city !== "All" && `Events in ${formattedCity}`}
+                {capitalizedCity === "All" && "All Events"}
+                {capitalizedCity !== "All" && `Events in ${capitalizedCity}`}
             </H1>
-            <EventsList events={events} />
+            <Suspense fallback={<Loading />}>
+                <EventsList city={city} />
+            </Suspense>
         </main>
     )
 }
-

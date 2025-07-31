@@ -1,33 +1,40 @@
-import H1 from "@/components/H1";
+import H1 from "@/components/H1"
 import Image from "next/image"
+import { Metadata } from "next"
+import { getEvent } from "@/lib/utils"
 
 type EventPageProps = {
     params: {
-        slug: string;
+        slug: string
     }
 }
 
+type MetaDataProps = EventPageProps
+
 type ContentSectionProps = {
-    heading: string;
-    body: string;
+    heading: string
+    body: string
+}
+
+export async function generateMetadata({
+    params,
+}: MetaDataProps): Promise<Metadata> {
+    const { slug } = params
+    const { name } = await getEvent(slug)
+
+    return {
+        title: `Event: ${name}`,
+    }
 }
 
 export default async function Event({ params }: EventPageProps) {
+    const { slug } = params
 
-    const slug = params.slug
-
-    const response = await fetch(`https://bytegrad.com/course-assets/projects/evento/api/events/${slug}`)
-
-    const event = await response.json()
+    const event = await getEvent(slug)
 
     return (
         <main>
-            <section
-                className="
-                    flex justify-center items-center relative overflow-hidden
-                    py-14 md:py-20
-                "
-            >
+            <section className="relative flex items-center justify-center overflow-hidden py-14 md:py-20">
                 <Image
                     alt="event background"
                     src={event.imageUrl}
@@ -35,13 +42,13 @@ export default async function Event({ params }: EventPageProps) {
                     sizes="(max-width: 1280px) 100vw, 1280px"
                     quality={50}
                     priority
-                    className="object-cover blur-3xl z-0"
+                    className="z-0 object-cover blur-3xl"
                 />
                 <div
                     className={[
                         "flex flex-col gap-6",
-                        "z-10 relative",
-                        "lg:flex-row lg:gap-16"
+                        "relative z-10",
+                        "lg:flex-row lg:gap-16",
                     ].join(" ")}
                 >
                     <Image
@@ -63,14 +70,17 @@ export default async function Event({ params }: EventPageProps) {
                             {event.name}
                         </H1>
                         <p className="whitespace-nowrap text-xl text-white/75">
-                            Organized by <span className="italic">{event.organizerName}</span>
+                            Organized by{" "}
+                            <span className="italic">
+                                {event.organizerName}
+                            </span>
                         </p>
                         <button
                             className={[
-                                "bg-white/20 bg-blur w-[95vw]",
-                                "py-2 mt-5",
+                                "bg-blur w-[95vw] bg-white/20",
+                                "mt-5 py-2",
                                 "text-lg capitalize",
-                                "border-white/10 rounded",
+                                "rounded border-white/10",
                                 "state-effects",
                                 "sm:w-full",
                                 "lg:mt-auto",
@@ -83,35 +93,30 @@ export default async function Event({ params }: EventPageProps) {
             </section>
             <div
                 className={[
-                    "flex flex-col justify-center items-center",
+                    "flex flex-col items-center justify-center",
                     "py-14",
-                    "text-center"
+                    "text-center",
                 ].join(" ")}
             >
                 <ContentSection
                     heading={"About this event"}
                     body={event.description}
                 />
-                <ContentSection
-                    heading={"Location"}
-                    body={event.location}
-                />
+                <ContentSection heading={"Location"} body={event.location} />
             </div>
-        </main >
+        </main>
     )
 }
 
 const ContentSection = ({ heading, body }: ContentSectionProps) => {
     return (
         <section className="text-center">
-            <h2 className="text-3xl font-bold text-white/95">
-                {heading}
-            </h2>
+            <h2 className="text-3xl font-bold text-white/95">{heading}</h2>
             <p
                 className={[
                     "max-w-[40rem]",
                     "leading-8 text-white/75",
-                    "pt-4 pb-8 px-8"
+                    "px-8 pb-8 pt-4",
                 ].join(" ")}
             >
                 {body}
